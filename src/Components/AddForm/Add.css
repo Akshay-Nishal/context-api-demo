@@ -1,0 +1,55 @@
+.addProduct{
+    margin: 20px;
+    padding: 20px 0px;
+    border: 3px solid blue;
+    border-radius: 10px;
+}
+
+form{
+    display: flex;
+    justify-content: space-around;
+    align-items: top;
+}
+
+.main-input{
+    display: flex;
+    flex-direction: column;
+}
+
+input{
+    /* height: 20px; */
+    padding: 3px;
+    border-radius: 7px;
+    border: 2px solid blue;
+}
+.main-input input{
+    /* margin-left: 30px; */
+    margin-top: 10px;
+    
+}
+
+.quantity-inputs{
+    display: flex; 
+    /* justify-content: space-around; */
+    /* flex-direction: ;  */
+}
+.quantity-inputs input{
+    width: 50px;
+}
+
+.size-input{
+    display: flex;
+    flex-direction: column;
+}
+
+.size-input input{
+    /* mar */
+    width: 35px;
+    margin: 0px 5px;
+}
+
+
+button{
+    height: 30px;
+    
+}
