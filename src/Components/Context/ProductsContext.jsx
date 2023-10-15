@@ -1,27 +1,42 @@
+import axios from "axios";
 import { createContext, useReducer } from "react";
 
 export const ProductContext = createContext(
     {
         productList : [],
         onAddProduct:(item)=>{},
-        onPurchaseProduct:(item)=>{}
+        onPurchaseProduct:(item)=>{},
+        initaliseProduct:(item)=>{}
     }
 )
 
 const defaultProducts ={
-    products:[
-        {name:'Adidas',description:'Running shoes',price:250,large:15,medium:25,small:0},
-        {name:'Bata',description:'Slippers',price:50,large:10,medium:5,small:7},
-        {name:'Jordan',description:'Basketball shoes',price:500,large:2,medium:7,small:3},
-    ]
+    products:[]
+}
+
+const updateProductsApi=(list)=>{
+    axios.put(`${localStorage.getItem('currentAPI')}/pruducts/${localStorage.getItem('currentProdId')}`,
+    {
+        products:list
+    })
+    .then(res=>{
+        console.log(res.data)
+    })
+
 }
 
 const productReducer = (state,action) =>{
     if(action.type==='Add'){
         console.log(action.item)
         const newList = state.products.concat(action.item)
+        updateProductsApi(newList)
         return{
             products:newList
+        }
+    }
+    if(action.type==='Initalise'){
+        return{
+            products:action.products
         }
     }
     if(action.type==='Purchase'){
@@ -30,16 +45,9 @@ const productReducer = (state,action) =>{
         console.log(ind);
         let newList = state.products
         let updatedProduct = newList[ind]
-        if(action.item.size==='large'){
-            updatedProduct.large=updatedProduct.large-1
-        }
-        if(action.item.size==='medium'){
-            updatedProduct.medium=updatedProduct.medium-1
-        }
-        if(action.item.size==='small'){
-            updatedProduct.small=updatedProduct.small-1
-        }
+        updatedProduct.quantity=updatedProduct.quantity-1
         newList[ind]=updatedProduct
+        updateProductsApi(newList)
         return{
             products:newList
         }
@@ -57,11 +65,15 @@ export const ProductProvider =({children})=>{
     const purchaseProduct = (item) =>{
         dispatchState({type:'Purchase',item:item})
     }
+    const setProduct =(items)=>{
+        dispatchState({type:'Initalise',products:items})
+    }
 
     const values={
         productList : listState.products,
         onAddProduct : addProduct,
-        onPurchaseProduct : purchaseProduct
+        onPurchaseProduct : purchaseProduct,
+        initaliseProduct : setProduct,
     }
     return <ProductContext.Provider value={values}>{children}</ ProductContext.Provider>
 }

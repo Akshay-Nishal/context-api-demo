@@ -7,13 +7,10 @@ function Item(props) {
     // console.log(prod.large);
     const cartCtx = useContext(CartListContext)
     const prodCtx = useContext(ProductContext)
-    const addToCartHandler = (siz) =>{
-        // console.log("Selected Size : ",siz)
-        // console.log("Selected Product : ",prod.name)
+    const addToCartHandler = () =>{
         let tem = {
             name:prod.name,
-            price:prod.price,
-            size:siz
+            price:prod.price
         }
         cartCtx.onAdd(tem)
         prodCtx.onPurchaseProduct(tem)
@@ -23,12 +20,11 @@ function Item(props) {
         <div className='item-details flex' >
         <p>{prod.name}</p>
         <p>{prod.description}</p>
-        <p>{prod.price}</p>
+        <p>$ {prod.price}</p>
+        <p>{prod.quantity<1? 'Out of stock': prod.quantity}</p>
         </div>
         <div className='buy-item flex'>
-        <button disabled={prod.large<=0} onClick={()=>addToCartHandler('large')} >Buy L ({prod.large})</button>
-        <button disabled={prod.medium<=0}  onClick={()=>addToCartHandler('medium')} >Buy M ({prod.medium})</button>
-        <button disabled={prod.small<=0}  onClick={()=>addToCartHandler('small')} >Buy S ({prod.small})</button>
+          <button onClick={addToCartHandler} disabled={prod.quantity<1}>Buy 1</button>
         </div>
     </div>
   )

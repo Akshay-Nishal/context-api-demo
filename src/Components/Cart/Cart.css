@@ -5,7 +5,7 @@
 .cartButton button{
     display: flex;
     align-items: center;
-    height: 60px;
+    height: auto;
     margin-top: 10px;
     border: 3px solid rgb(102, 102, 102);
     background-color: gray;

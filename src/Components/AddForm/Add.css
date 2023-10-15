@@ -9,6 +9,7 @@ form{
     display: flex;
     justify-content: space-around;
     align-items: top;
+    align-items: center;
 }
 
 .main-input{

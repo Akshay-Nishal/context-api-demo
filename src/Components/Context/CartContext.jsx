@@ -1,20 +1,23 @@
+import axios from "axios";
 import React, { useReducer, useState } from "react";
+
 
 export const CartListContext = React.createContext({
     cartList : [],
     cartNumber : null,
     totalAmount : null,
     onAdd:(item)=>{},
-    onOrder:()=>{}
+    onOrder:()=>{},
+    initaliseCart:(items)=>{}
 })
 
 // const defaultCart ={
 //     items:[
-//         {name:'Adidas',price:250,large:0,medium:2,small:1,totalAmount:750},
-//         {name:'Bata',price:50,large:1,medium:0,small:1,totalAmount:100}
+//         {name:'PCM',price:50,quantity:5,totalAmount:250},
+//         {name:'Dolo',price:15,quantity:2,totalAmount:30}
 //     ],
-//     totalCartAmount:850,
-//     cartNumber:5
+//     totalCartAmount:280,
+//     cartNumber:7
 // }
 const defaultCart ={
     items:[],
@@ -22,28 +25,38 @@ const defaultCart ={
     cartNumber:0
 }
 
+const updateCartApi=(list)=>{
+    axios.put(`${localStorage.getItem('currentAPI')}/cart/${localStorage.getItem('currentCartId')}`,
+    {
+        cart:list
+    })
+    .then(res=>{
+        console.log(res.data)
+    })
+
+}
+
 const cartReducer = (state,action) => {
     // console.log("Add Called");
     if(action.type==='Add'){
         const updatedCartNumber = state.cartNumber+1
-        const updatedTotalAmount = state.totalCartAmount + action.item.price
+        const updatedTotalAmount = parseInt(state.totalCartAmount) + parseInt(action.item.price)
         let newList = state.items
 
         let ind = state.items.findIndex((it)=>it.name===action.item.name)
         if(ind!==-1){
             let updateItem = newList[ind]
-            if(action.item.size==='large'){
-                updateItem.large=updateItem.large+1
-            }
-            if(action.item.size==='medium'){
-                updateItem.medium=updateItem.medium+1
-            }
-            if(action.item.size==='small'){
-                updateItem.small=updateItem.small+1
-            }
-            updateItem.totalAmount+=action.item.price
+            updateItem.quantity=updateItem.quantity+1
+
+            updateItem.totalAmount= parseInt(updateItem.totalAmount)+parseInt(action.item.price)
             // console.log(updateItem);
             newList[ind]=updateItem
+            let upCart = {
+                items:newList,
+                totalCartAmount:updatedTotalAmount,
+                cartNumber:updatedCartNumber
+            }
+            updateCartApi(upCart)
             return{
                 items:newList,
                 totalCartAmount:updatedTotalAmount,
@@ -55,23 +68,20 @@ const cartReducer = (state,action) => {
             const newItem={
                 name:action.item.name,
                 price:action.item.price,
-                large:0,
-                medium:0,
-                small:0,
+                quantity:0,
                 totalAmount:action.item.price
             }
-            if(action.item.size==='large'){
-                newItem.large=newItem.large+1
-            }
-            if(action.item.size==='medium'){
-                newItem.medium=newItem.medium+1
-            }
-            if(action.item.size==='small'){
-                newItem.small=newItem.small+1
-}
+            newItem.quantity=newItem.quantity+1
+
             console.log(newItem)
             newList.push(newItem)
             console.log(newList);
+            let upCart = {
+                items:newList,
+                totalCartAmount:updatedTotalAmount,
+                cartNumber:updatedCartNumber
+            }
+            updateCartApi(upCart)
             return{
                 items:newList,
                 totalCartAmount:updatedTotalAmount,
@@ -80,10 +90,23 @@ const cartReducer = (state,action) => {
         }
     }
     if(action.type==='Order'){
+        let upCart = {
+            items:[],
+            totalCartAmount:0,
+            cartNumber:0
+        }
+        updateCartApi(upCart)
         return{
             items:[],
             totalCartAmount:0,
             cartNumber:0
+        }
+    }
+    if(action.type==='InitaliseCart'){
+        return{
+            items:action.items.items,
+            totalCartAmount:action.items.totalCartAmount,
+            cartNumber:action.items.cartNumber
         }
     }
     return(defaultCart)
@@ -99,6 +122,9 @@ export const CartListProvider = ({children})=>{
     const placeOrder = () =>{
         dispatchState({type:'Order'})
     }
+    const setCart=(items)=>{
+        dispatchState({type:'InitaliseCart',items:items})
+    }
 
 
     
@@ -107,7 +133,9 @@ export const CartListProvider = ({children})=>{
         cartNumber : cartState.cartNumber,
         totalAmount : cartState.totalCartAmount,
         onAdd : addItem,
-        onOrder : placeOrder}
+        onOrder : placeOrder,
+        initaliseCart : setCart
+    }
 
     return <CartListContext.Provider value={values}>{children}</CartListContext.Provider>
 }

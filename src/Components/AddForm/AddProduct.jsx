@@ -5,7 +5,7 @@ import './Add.css'
 export default function AddProduct() {
     return (
         <div className='addProduct'>
-        <h2>Add product</h2>
+        <h2>Add Medicine</h2>
         <AddForm/>
     </div>
   )

@@ -8,9 +8,7 @@ export default function AddForm() {
     const nameRef = useRef()
     const descRef = useRef()
     const priceRef = useRef()
-    const larRef = useRef()
-    const medRef = useRef()
-    const smlRef = useRef()
+    const quanRef = useRef()
     const addProductHandler = (event) =>{
         event.preventDefault()
         // console.log("Submit")
@@ -24,25 +22,19 @@ export default function AddForm() {
         let enteredname        = nameRef.current.value
         let entereddescription = descRef.current.value 
         let enteredprice       = priceRef.current.value
-        let enteredlarge       = larRef.current.value 
-        let enteredmedium      = medRef.current.value 
-        let enteredsmall       = smlRef.current.value
-        if(enteredname && entereddescription && enteredprice && enteredlarge && enteredmedium && enteredsmall){
+        let enteredQuan       = quanRef.current.value
+        if(enteredname && entereddescription && enteredprice && enteredQuan){
             let item = {
                 name: enteredname,
                 description: entereddescription,
                 price : enteredprice,
-                large : enteredlarge,
-                medium : enteredmedium,
-                small : enteredsmall
+                quantity : enteredQuan,
             }
             prodCtx.onAddProduct(item)
             nameRef.current.value  =''
             descRef.current.value  =''
             priceRef.current.value =''
-            larRef.current.value   =''
-            medRef.current.value   =''
-            smlRef.current.value   =''
+            quanRef.current.value   =''
  
         }
         else{
@@ -79,41 +71,16 @@ export default function AddForm() {
             // value={160}
             />
         </div>
-        <div className='product-price'>
-            <p>Quantity</p>
-            <div className='quantity-inputs'>
-                <div className='size-input'>
-                    <label htmlFor="large">L</label>
-                    <input  
-                    ref={larRef} 
-                    id='large' 
-                    // value={10} 
-                    min={1} max={20} 
-                    type="number" 
-                    />
-                </div>
-                <div className='size-input'>
-                    <label htmlFor="medium">M</label>
-                    <input 
-                    ref={medRef} 
-                    id='medium' 
-                    // value={10}
-                    min={1} max={20} 
-                    type="number" 
-                    />
-                </div>
-                <div className='size-input'>
-                    <label htmlFor="small">S</label>
-                    <input  
-                    ref={smlRef} 
-                    id='small' 
-                    // value={10}
-                    min={1} max={20} 
-                    type="number" />
-                </div>
-            </div>
+        <div className='product-quantity main-input'>
+            <label htmlFor="quantity">Quantity</label>
+            <input 
+            ref={quanRef} 
+            id='quantity' 
+            type="number"  
+            // value={160}
+            />
         </div>
-        <button type='submit'>Add Product</button>
+        <button type='submit'>Add Medicine</button>
     </form>
   )
 }

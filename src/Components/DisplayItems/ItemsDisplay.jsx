@@ -8,14 +8,22 @@ function ItemsDisplay() {
     // console.log(prodCtx.productList)
     return (
         <div className='itemDisplay'>
-        <h2>Product List</h2>
-        {prodCtx.productList.map((product)=>{
-            return(
-                <Item key={product.name} data={product}/>
-            )
-        })}
-    </div>
-  )
+        <h2>Medicine List</h2>
+        <div className='item'>
+        <div className='item-details flex' >
+            <b>Name</b>
+            <b>Description</b>
+            <b>Price</b>
+            <b>Remaining</b>
+        </div>
+        </div>
+            {prodCtx.productList.map((product)=>{
+                return(
+                    <Item key={product.name} data={product}/>
+                )
+            })}
+        </div>
+    )
 }
 
 
